@@ -37,7 +37,7 @@ export default async function signIn(
 
       res.setHeader(
         "setHeader",
-        cookie.serialize("DELIVAME_ACCESS_TOKEN", token, {
+        cookie.serialize(process.env.accessTokenName, token, {
           httpOnly: true,
           maxAge: 8 * 60 * 60,
           path: "/",
@@ -45,8 +45,11 @@ export default async function signIn(
           secure: process.env.NODE_ENV === "production",
         })
       );
-      return res.json({});
+      return res.json(user);
     }
+    return res
+      .status(401)
+      .json({ status: 400, message: "Invalid user Credentials" });
   } catch (e) {
     return res.status(401).json({ status: 400, message: e.message });
   }

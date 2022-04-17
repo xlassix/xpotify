@@ -47,7 +47,7 @@ export default async function signup(
 
   res.setHeader(
     "setHeader",
-    cookie.serialize("DELIVAME_ACCESS_TOKEN", token, {
+    cookie.serialize(process.env.accessTokenName, token, {
       httpOnly: true,
       maxAge: 8 * 60 * 60,
       path: "/",

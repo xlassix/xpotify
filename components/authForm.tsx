@@ -1,22 +1,28 @@
-import { SWRConfig } from "swr";
+// import { SWRConfig } from "swr";
 import { useRouter } from "next/router";
 import { Flex, Box, Divider, Input, Button, Center } from "@chakra-ui/react";
 import { useState } from "react";
 import NextImage from "next/image";
 import { auth } from "../lib/access";
 
-const AuthForm: FC<{ mode: string }> = ({ mode }) => {
+const AuthForm = ({ mode }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [isLoading, setLoading] = useState(false);
-  const [_mode, setMode] = useState(mode ? mode : "signin");
+  const [_mode, setMode] = useState(mode);
 
   const router = useRouter();
 
   async function handleSubmit(e) {
     e.preventDefault();
     setLoading(true);
-    await auth(_mode, { email, password });
+    e.target.reset();
+    const res = await auth(_mode, { email, password });
+    if (res.status !== 200) {
+      const json = await res.json();
+      setError(json.message);
+    }
     setLoading(false);
     router.push("/");
   }
@@ -54,7 +60,10 @@ const AuthForm: FC<{ mode: string }> = ({ mode }) => {
             lineHeight="1.5rem"
             marginY="0.25rem"
             focusBorderColor="gray.700"
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
+            value={email}
             required
           />
           <p>Password</p>
@@ -69,6 +78,17 @@ const AuthForm: FC<{ mode: string }> = ({ mode }) => {
             focusBorderColor="gray.700"
             required
           />
+          {error.length > 0 ? (
+            <p
+              style={{
+                textAlign: "center",
+                color: "var(--chakra-colors-red-400)",
+                padding: "0.2rem",
+              }}
+            >
+              {error}
+            </p>
+          ) : null}
           <Button
             type="submit"
             bg="green.600"

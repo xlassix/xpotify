@@ -1,4 +1,4 @@
-import AuthForm from "../components/authForm";
+import AuthForm from "../components/AuthForm";
 import { useState } from "react";
 const Auth = () => {
   const [mode, setMode] = useState("signin");

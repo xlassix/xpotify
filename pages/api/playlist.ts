@@ -7,7 +7,7 @@ export default validateRoute(async (req, res, user) => {
       userId: user.id,
     },
     orderBy: {
-      createdAt: "asc",
+      id: "asc",
     },
   });
   return res.json(playlist);

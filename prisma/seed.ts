@@ -31,9 +31,37 @@ const run = async () => {
     create: {
       email: "test@test.com",
       password: bcrypt.hashSync("12345", salt),
+      firstName: "Ayobami",
+      lastName: "Oki",
+      avatar: "https://avatars.githubusercontent.com/u/46370698?v=4",
     },
   });
-  console.log(user);
+
+  console.log("user", user);
+
+  const songs = await prisma.song.findMany({});
+  const playlist = await Promise.all(
+    Array(5)
+      .fill(1)
+      .map(async (artist, index) => {
+        return prisma.playlist.upsert({
+          where: { id: index + 1 },
+          update: {},
+          create: {
+            id: index + 1,
+            userId: user.id,
+            name: `Playlist #0${index + 1}`,
+            songs: {
+              connect: Array(2)
+                .fill(1)
+                .map(() => ({
+                  id: songs[Math.floor(Math.random() * songs.length)].id,
+                })),
+            },
+          },
+        });
+      })
+  );
 };
 
 run()

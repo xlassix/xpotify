@@ -2,8 +2,12 @@ import fetcher from "./fetcher";
 
 export const auth = (
   mode: "signin" | "signup",
-  data: { email: string; password: string }
+  data: {
+    email: string;
+    password: string;
+    firstName?: string;
+    lastName?: string;
+  }
 ) => {
-  console.log("auth", `/${mode}`, data);
   return fetcher(`/${mode}`, data);
 };

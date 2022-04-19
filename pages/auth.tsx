@@ -1,8 +1,7 @@
 import AuthForm from "../components/AuthForm";
-import { useState } from "react";
+
 const Auth = () => {
-  const [mode, setMode] = useState("signin");
-  return <AuthForm mode={mode} />;
+  return <AuthForm mode="signin" />;
 };
 
 Auth.plainPageLayout = true;

@@ -36,7 +36,7 @@ export default async function signIn(
       );
 
       res.setHeader(
-        "setHeader",
+        "Set-Cookie",
         cookie.serialize(process.env.accessTokenName, token, {
           httpOnly: true,
           maxAge: 8 * 60 * 60,
@@ -45,7 +45,12 @@ export default async function signIn(
           secure: process.env.NODE_ENV === "production",
         })
       );
-      return res.json(user);
+
+      delete user.password;
+
+      return res
+        .status(202)
+        .json({ user, token, key: process.env.accessTokenName });
     }
     return res
       .status(401)

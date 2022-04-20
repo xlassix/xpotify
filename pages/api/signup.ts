@@ -9,8 +9,8 @@ export default async function signup(
   res: NextApiResponse
 ) {
   const salt = bcrypt.genSaltSync();
-  const { email, password } = req.body;
-  if (!email || !password) {
+  const { email, password, firstName, lastName } = req.body;
+  if (!email || !password || !firstName || !lastName) {
     return res.status(400).json({
       status: 400,
       message: "email and password are required to create and account",
@@ -23,6 +23,8 @@ export default async function signup(
     user = await prismaClient.user.create({
       data: {
         email,
+        firstName,
+        lastName,
         password: bcrypt.hashSync(password, salt),
       },
     });
@@ -46,7 +48,7 @@ export default async function signup(
   );
 
   res.setHeader(
-    "setHeader",
+    "Set-Cookie",
     cookie.serialize(process.env.accessTokenName, token, {
       httpOnly: true,
       maxAge: 8 * 60 * 60,

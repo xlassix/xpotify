@@ -1,5 +1,6 @@
 import NextImage from "next/image";
-import Link from "next/link";
+import NextLink from "next/link";
+
 import {
   Box,
   LinkBox,
@@ -9,6 +10,7 @@ import {
   List,
   Divider,
   Center,
+  Text,
 } from "@chakra-ui/layout";
 
 import {
@@ -18,6 +20,7 @@ import {
   MdHome,
   MdLibraryMusic,
 } from "react-icons/md";
+import { usePlaylist } from "../lib/hooks";
 
 const navMenu = [
   {
@@ -51,6 +54,7 @@ const MusicMenu = [
 ];
 
 const SideBar = () => {
+  const { playlists } = usePlaylist();
   return (
     <Box width="100%" height="100%" bg="black" paddingX="4px" color="gray">
       <Center paddingY="1rem">
@@ -61,7 +65,7 @@ const SideBar = () => {
           {navMenu.map((menu) => (
             <ListItem paddingX="1.5rem" fontSize="1rem" key={menu.name}>
               <LinkBox>
-                <Link href={menu.route} passHref>
+                <NextLink href={menu.route} passHref>
                   <LinkOverlay display="flex" sx={{ alignItems: "center" }}>
                     <ListIcon
                       as={menu.icon}
@@ -70,7 +74,7 @@ const SideBar = () => {
                     />
                     <p>{menu.name}</p>
                   </LinkOverlay>
-                </Link>
+                </NextLink>
               </LinkBox>
             </ListItem>
           ))}
@@ -79,7 +83,7 @@ const SideBar = () => {
           {MusicMenu.map((menu) => (
             <ListItem paddingX="1rem" fontSize="1rem" key={menu.name}>
               <LinkBox>
-                <Link href={menu.route} passHref>
+                <NextLink href={menu.route} passHref>
                   <LinkOverlay display="flex" sx={{ alignItems: "center" }}>
                     <ListIcon
                       as={menu.icon}
@@ -88,7 +92,7 @@ const SideBar = () => {
                     />
                     <p>{menu.name}</p>
                   </LinkOverlay>
-                </Link>
+                </NextLink>
               </LinkBox>
             </ListItem>
           ))}
@@ -97,26 +101,27 @@ const SideBar = () => {
           <Divider width="80%" color="gray.800" />
         </Center>
       </Box>
-      <Box height="calc( 100vh - 370px )" paddingX="1rem" overflowY="auto">
-          <h5>erer</h5>
-          <h5>erer</h5>
-          <h5>erer</h5>
-          <h5>erer</h5>
-          <h5>erer</h5>
-          <h5>erer</h5>
-          <h5>erer</h5>
-          <h5>erer</h5>
-          <h5>erer</h5>
-          <h5>erer</h5>
-          <h5>erer</h5>
-          <h5>erer</h5>
-          <h5>erer</h5>
-          <h5>erer</h5>
-          <h5>erer</h5>
-          <h5>erer</h5>
-          <h5>erer</h5>
-          <h5>erer</h5>
-      </Box>
+      <List height="calc( 100vh - 370px )" paddingX="1rem" overflowY="auto">
+        {playlists.map((_playlist) => {
+          return (
+            <ListItem key={_playlist.id}>
+              <NextLink
+                href={{
+                  pathname: "/playlist/[id]",
+                  query: { id: _playlist.id },
+                }}
+                passHref
+              >
+                <LinkBox key={_playlist.id}>
+                  <LinkOverlay>
+                    <Text>{_playlist?.name}</Text>
+                  </LinkOverlay>
+                </LinkBox>
+              </NextLink>
+            </ListItem>
+          );
+        })}
+      </List>
     </Box>
   );
 };

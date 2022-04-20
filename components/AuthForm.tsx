@@ -6,8 +6,7 @@ import NextImage from "next/image";
 import { auth } from "../lib/access";
 
 const AuthForm = ({ mode }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [isLoading, setLoading] = useState(false);
   const [_mode, setMode] = useState(mode);
@@ -16,13 +15,19 @@ const AuthForm = ({ mode }) => {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    e.target.reset();
     setLoading(true);
     e.target.reset();
-    const res = await auth(_mode, { email, password });
+    const res = await auth(_mode, formData);
     if (res.status !== 200) {
-      const json = await res.json();
-      setError(json.message);
+      try {
+        setError(res.message);
+      } catch (_) {
+        console.log(res);
+        setError("we cant access our server at this point in time");
+      }
     }
+    console.log("ress", res);
     setLoading(false);
     router.push("/");
   }
@@ -50,35 +55,77 @@ const AuthForm = ({ mode }) => {
           <NextImage src="/logo.svg" height={50} width={181} />
         </Center>
         <form onSubmit={handleSubmit}>
+          {_mode === "signup" ? (
+            <>
+              <p>FirstName</p>
+              <Input
+                minLength={2}
+                bg="none"
+                placeholder="First Name"
+                padding="0.5rem"
+                name="firstName"
+                fontSize="1rem"
+                lineHeight="1.5rem"
+                marginY="0.25rem"
+                focusBorderColor="gray.700"
+                onChange={(e) => {
+                  setFormData({ ...formData, firstName: e.target.value });
+                }}
+                value={formData.firstName}
+                required
+              />
+              <p>Email address or username</p>
+              <Input
+                minLength={2}
+                bg="none"
+                placeholder="Last Name"
+                padding="0.5rem"
+                name="lastName"
+                fontSize="1rem"
+                lineHeight="1.5rem"
+                marginY="0.25rem"
+                focusBorderColor="gray.700"
+                onChange={(e) => {
+                  setFormData({ ...formData, lastName: e.target.value });
+                }}
+                value={formData.lastName}
+                required
+              />
+            </>
+          ) : null}
           <p>Email address or username</p>
           <Input
             type="email"
             bg="none"
             placeholder="Email address or username"
             padding="0.5rem"
+            name="email"
             fontSize="1rem"
             lineHeight="1.5rem"
             marginY="0.25rem"
             focusBorderColor="gray.700"
             onChange={(e) => {
-              setEmail(e.target.value);
+              setFormData({ ...formData, email: e.target.value });
             }}
-            value={email}
+            value={formData.email}
             required
           />
           <p>Password</p>
           <Input
             type="password"
             placeholder="Password"
+            name="password"
             padding="0.75rem"
             fontSize="1rem"
             lineHeight="1.5rem"
             marginY="0.25rem"
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) =>
+              setFormData({ ...formData, password: e.target.value })
+            }
             focusBorderColor="gray.700"
             required
           />
-          {error.length > 0 ? (
+          {error ? (
             <p
               style={{
                 textAlign: "center",
@@ -126,7 +173,6 @@ const AuthForm = ({ mode }) => {
           }}
         >
           <p>
-            {" "}
             {_mode === "signin"
               ? "Don't have an account?"
               : "I have an account?"}

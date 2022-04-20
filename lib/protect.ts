@@ -28,3 +28,8 @@ export const validateRoute = (handler) => {
     return res.status(401).end();
   };
 };
+
+export const validateToken = (token) => {
+  const user = jwt.verify(token, process.env.jwt_secret);
+  return user;
+};

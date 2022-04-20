@@ -34,8 +34,8 @@ const theme = extendTheme({
 
 const MyApp = ({ Component, pageProps }) => {
   return (
-    <StoreProvider store={store}>
-      <ChakraProvider theme={theme}>
+    <ChakraProvider theme={theme}>
+      <StoreProvider store={store}>
         {Component.plainPageLayout ? (
           <Component {...pageProps} />
         ) : (
@@ -43,8 +43,8 @@ const MyApp = ({ Component, pageProps }) => {
             <Component {...pageProps} />
           </PlayerLayout>
         )}
-      </ChakraProvider>
-    </StoreProvider>
+      </StoreProvider>
+    </ChakraProvider>
   );
 };
 

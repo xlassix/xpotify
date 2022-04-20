@@ -1,10 +1,19 @@
 import { Th, Td, Tr, Table, Tbody, Thead, IconButton } from "@chakra-ui/react";
+import { useStoreActions } from "easy-peasy";
 import { Box } from "@chakra-ui/layout";
 import { BsFillPlayFill } from "react-icons/bs";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { formatDate, formatSongTime } from "../lib/formatter";
 
 const SongTable = ({ songs }) => {
+  const playSongs = useStoreActions((state: any) => state.changeActiveSongs);
+  const setActiveSong = useStoreActions((state: any) => state.changeActiveSong);
+
+  function handlePlay(song?) {
+    playSongs(songs);
+    setActiveSong(song || songs[0]);
+  }
+
   return (
     <Box bg="transparent" padding="2rem" color="white">
       <IconButton
@@ -14,6 +23,7 @@ const SongTable = ({ songs }) => {
         isRound
         aria-label="PlayButton"
         outline="none"
+        onClick={() => handlePlay()}
         sx={{
           "$:focus": {
             outline: "none",
@@ -33,6 +43,7 @@ const SongTable = ({ songs }) => {
           {songs.map((song, ind) => {
             return (
               <Tr
+                onClick={() => handlePlay(song)}
                 sx={{
                   transition: "350ms",
                   "&:hover": {

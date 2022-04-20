@@ -1,5 +1,5 @@
 import NextImage from "next/image";
-import Link from "next/link";
+import NextLink from "next/link";
 
 import {
   Box,
@@ -65,7 +65,7 @@ const SideBar = () => {
           {navMenu.map((menu) => (
             <ListItem paddingX="1.5rem" fontSize="1rem" key={menu.name}>
               <LinkBox>
-                <Link href={menu.route} passHref>
+                <NextLink href={menu.route} passHref>
                   <LinkOverlay display="flex" sx={{ alignItems: "center" }}>
                     <ListIcon
                       as={menu.icon}
@@ -74,7 +74,7 @@ const SideBar = () => {
                     />
                     <p>{menu.name}</p>
                   </LinkOverlay>
-                </Link>
+                </NextLink>
               </LinkBox>
             </ListItem>
           ))}
@@ -83,7 +83,7 @@ const SideBar = () => {
           {MusicMenu.map((menu) => (
             <ListItem paddingX="1rem" fontSize="1rem" key={menu.name}>
               <LinkBox>
-                <Link href={menu.route} passHref>
+                <NextLink href={menu.route} passHref>
                   <LinkOverlay display="flex" sx={{ alignItems: "center" }}>
                     <ListIcon
                       as={menu.icon}
@@ -92,7 +92,7 @@ const SideBar = () => {
                     />
                     <p>{menu.name}</p>
                   </LinkOverlay>
-                </Link>
+                </NextLink>
               </LinkBox>
             </ListItem>
           ))}
@@ -101,25 +101,27 @@ const SideBar = () => {
           <Divider width="80%" color="gray.800" />
         </Center>
       </Box>
-      <Box height="calc( 100vh - 370px )" paddingX="1rem" overflowY="auto">
+      <List height="calc( 100vh - 370px )" paddingX="1rem" overflowY="auto">
         {playlists.map((_playlist) => {
           return (
-            <LinkBox key={_playlist.id}>
-              <Link
+            <ListItem key={_playlist.id}>
+              <NextLink
                 href={{
                   pathname: "/playlist/[id]",
                   query: { id: _playlist.id },
                 }}
                 passHref
               >
-                <LinkOverlay>
-                  <Text>{_playlist?.name}</Text>
-                </LinkOverlay>
-              </Link>
-            </LinkBox>
+                <LinkBox key={_playlist.id}>
+                  <LinkOverlay>
+                    <Text>{_playlist?.name}</Text>
+                  </LinkOverlay>
+                </LinkBox>
+              </NextLink>
+            </ListItem>
           );
         })}
-      </Box>
+      </List>
     </Box>
   );
 };
